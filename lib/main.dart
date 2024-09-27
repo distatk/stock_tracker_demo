@@ -17,7 +17,7 @@ void main() async {
 }
 
 void _initializeServices() {
-  _stockInfoService = StockInfoService(client: client);
+  _stockInfoService = StockInfoService(client: client.value);
 }
 
 class MyApp extends StatelessWidget {
