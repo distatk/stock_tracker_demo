@@ -7,7 +7,7 @@ class Stock {
     required this.title,
     required this.exchange,
     required this.jittaScore,
-    required this.nativeName,
+    this.nativeName,
     required this.industry,
     required this.sector,
   })  : assert(jittaScore >= 0, 'jittaScore must be >= 0'),
@@ -20,9 +20,9 @@ class Stock {
   final String title;
   final String exchange;
   final double jittaScore;
-  final String nativeName;
-  final String industry;
-  final String sector;
+  final String? nativeName;
+  final String? industry;
+  final String? sector;
 
   static Stock testStock = Stock(
     id: 'BKK:TEST',
@@ -60,6 +60,23 @@ class Stock {
       nativeName: nativeName ?? this.nativeName,
       industry: industry ?? this.industry,
       sector: sector ?? this.sector,
+    );
+  }
+
+  static Stock fromJson(Map<String, dynamic> json) {
+    final scoreNum = json['jittaScore'] as num;
+    final jittaScore = scoreNum.toDouble();
+    return Stock(
+      id: json['id'] as String,
+      stockId: json['stockId'] as int,
+      rank: json['rank'] as int,
+      symbol: json['symbol'] as String,
+      title: json['title'] as String,
+      exchange: json['exchange'] as String,
+      jittaScore: jittaScore,
+      nativeName: json['nativeName'] as String?,
+      industry: json['industry'] as String?,
+      sector: json['sector']?['name'] as String?,
     );
   }
 }

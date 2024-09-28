@@ -1,4 +1,5 @@
 import 'package:async/async.dart';
+import 'package:stock_tracker_demo/constants/configs.dart';
 import 'package:stock_tracker_demo/data_models/pagination_model.dart';
 
 /// Utilities for pagination apis
@@ -26,7 +27,7 @@ class PaginationUtils<T> {
   /// callback must return [PaginationModel]
   final Future<PaginationModel<T>> Function(int? start) callback;
 
-  int _currentPage = 1;
+  int _currentPage = 0;
   int _totalDataCount = 1;
   int _dataCount = 0;
 
@@ -53,7 +54,7 @@ class PaginationUtils<T> {
     }
 
     // reset current page
-    _currentPage = start ?? 1;
+    _currentPage = start ?? 0;
     _firstFetchingSingleton = CancelableOperation.fromFuture(
       _fetchData(pageToLoad: start),
       onCancel: () {
@@ -78,6 +79,10 @@ class PaginationUtils<T> {
       final data = await _fetchData(pageToLoad: _currentPage + 1);
       list.addAll(data);
     }
+    _dataCount = list.length;
+    print('_dataCount: $_dataCount, _totalDataCount: $_totalDataCount');
+    canLoadMore = _dataCount < _totalDataCount;
+    _currentPage = _dataCount ~/ Configs.defaultPageSize;
     removeDuplicatedItemsFromList();
   }
 
@@ -89,9 +94,6 @@ class PaginationUtils<T> {
     }
     final result = await callback.call(_currentPage);
     _totalDataCount = result.totalDataCount;
-    _dataCount = result.dataCount ?? result.objectList.length;
-    canLoadMore = _dataCount < _totalDataCount;
-    _currentPage = _totalDataCount ~/ 30;
     isFetching = false;
     return result.objectList;
   }
