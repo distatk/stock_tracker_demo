@@ -28,6 +28,8 @@ class StockTile extends StatelessWidget {
       children: [
         Text(
           stock.title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,

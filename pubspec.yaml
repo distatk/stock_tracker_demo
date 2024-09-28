@@ -40,6 +40,7 @@ dependencies:
   async: ^2.11.0
   gap: ^3.0.1
   equatable: ^2.0.5
+  pull_to_refresh: ^2.0.0
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
