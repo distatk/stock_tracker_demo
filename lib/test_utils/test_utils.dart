@@ -75,6 +75,7 @@ class TestUtils {
           child: MaterialApp(
             home: Scaffold(body: widget),
             navigatorObservers: observers,
+            debugShowCheckedModeBanner: false,
             onGenerateRoute: (settings) => MaterialPageRoute<void>(
               settings: settings,
               builder: (_) => Container(),
