@@ -4,6 +4,8 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_tracker_demo/data_models/pagination_model.dart';
+import 'package:stock_tracker_demo/data_models/stock.dart';
 import 'package:stock_tracker_demo/pages/home_page.dart';
 import 'package:stock_tracker_demo/services/stock_info_service.dart';
 import 'package:stock_tracker_demo/test_utils/test_utils.dart';
@@ -21,6 +23,19 @@ void main() {
 
     when(mockStockInfoService.getSectors())
         .thenAnswer((_) async => ['Consumer', 'Energy', 'Financials']);
+    when(
+      mockStockInfoService.getStockList(
+        market: anyNamed('market'),
+        sector: anyNamed('sector'),
+        page: anyNamed('page'),
+        limit: anyNamed('limit'),
+      ),
+    ).thenAnswer(
+      (_) async => PaginationModel(
+        objectList: List.generate(10, (i) => Stock.testStock.copyWith(id: 'i')),
+        totalDataCount: 10,
+      ),
+    );
   });
 
   Future<void> pumpPage(WidgetTester tester) async {
@@ -28,7 +43,7 @@ void main() {
       tester,
       MyHomePage(title: 'Stock Tracker Demo'),
       providers: [
-        Provider<StockInfoService>.value(value: mockStockInfoService)
+        Provider<StockInfoService>.value(value: mockStockInfoService),
       ],
     );
   }

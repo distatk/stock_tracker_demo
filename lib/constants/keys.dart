@@ -3,4 +3,5 @@ class Keys {
   static const name = 'name';
   static const jittaRanking = 'jittaRanking';
   static const data = 'data';
+  static const count = 'count';
 }
