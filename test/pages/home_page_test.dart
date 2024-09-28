@@ -32,7 +32,13 @@ void main() {
       ),
     ).thenAnswer(
       (_) async => PaginationModel(
-        objectList: List.generate(10, (i) => Stock.testStock.copyWith(id: 'i')),
+        objectList: List.generate(
+          6,
+          (index) => Stock.testStock.copyWith(
+            rank: index + 1,
+            jittaScore: (index + 1) * 1.5,
+          ),
+        ),
         totalDataCount: 10,
       ),
     );

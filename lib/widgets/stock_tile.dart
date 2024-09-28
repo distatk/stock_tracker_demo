@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_tracker_demo/data_models/stock.dart';
+import 'package:stock_tracker_demo/widgets/stock_rating_widget.dart';
 
 class StockTile extends StatelessWidget {
   const StockTile({required this.stock, super.key});
@@ -53,13 +54,10 @@ class StockTile extends StatelessWidget {
         _buildRanking(context),
         Expanded(child: _buildNameAndSubtitle(context)),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            stock.jittaScore.toString(),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: SizedBox(
+            width: 64,
+            child: StockRatingWidget(rating: stock.jittaScore),
           ),
         ),
       ],
