@@ -41,6 +41,8 @@ dependencies:
   gap: ^3.0.1
   equatable: ^2.0.5
   pull_to_refresh: ^2.0.0
+  percent_indicator: ^4.2.3
+  syncfusion_flutter_gauges: ^27.1.50
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
