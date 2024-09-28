@@ -77,7 +77,7 @@ class StockTile extends StatelessWidget {
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 2,
-            offset: Offset(4, 4), // changes position of shadow
+            offset: Offset(4, 4),
           ),
         ],
       ),

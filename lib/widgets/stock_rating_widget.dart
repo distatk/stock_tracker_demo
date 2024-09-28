@@ -23,28 +23,16 @@ class StockRatingWidget extends StatelessWidget {
               sizeUnit: GaugeSizeUnit.factor,
               gradient: const SweepGradient(
                   colors: <Color>[Color(0xFFCC2B5E), Color(0xFF753A88)],
-                  stops: <double>[0.25, 0.75]
-                  // stops: <double>[0.25, 0.5, 0.75],
-                  ),
+                  stops: <double>[0.25, 0.75]),
             )
           ],
           annotations: <GaugeAnnotation>[
             GaugeAnnotation(
-              widget: Container(
-                child: Text(rating.toStringAsFixed(2)),
-              ),
+              widget: Text(rating.toStringAsFixed(2)),
             ),
           ],
         ),
       ],
     );
-    // return CircularPercentIndicator(
-    //   radius: 24.0,
-    //   percent: rating * 0.1,
-    //   center: Text(rating.toStringAsFixed(2)),
-    //   linearGradient: LinearGradient(
-    //     colors: [Colors.green, Colors.amber, Colors.red],
-    //   ),
-    // );
   }
 }
