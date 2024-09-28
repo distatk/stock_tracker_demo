@@ -37,6 +37,8 @@ dependencies:
   provider: ^6.1.2
   mockito: ^5.4.4
   golden_toolkit: ^0.15.0
+  async: ^2.11.0
+  gap: ^3.0.1
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
