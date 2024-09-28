@@ -25,7 +25,7 @@ class PaginationModel<T> extends Equatable {
   List<Object?> get props => [objectList, totalDataCount];
 
   /// default model for error from server
-  static PaginationModel defaultModel() => PaginationModel(
+  static PaginationModel<T> defaultModel<T>() => PaginationModel<T>(
         objectList: [],
         totalDataCount: 1,
         dataCount: 0,

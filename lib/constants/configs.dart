@@ -1,3 +1,3 @@
 class Configs {
-  static const defaultPageSize = 20;
+  static const defaultPageSize = 30;
 }

@@ -30,22 +30,26 @@ class StockInfoService {
     final query = gql(Queries.getStockList);
     final variables = {
       'market': market,
-      // 'sector': sector,
+      if (sector.isNotEmpty) 'sectors': sector,
       'page': page,
       'limit': limit
     };
-    final result =
-        await client.query(QueryOptions(document: query, variables: variables));
-    final resultList = result.data![Keys.jittaRanking][Keys.data] as List;
-    final totalDataCount = result.data![Keys.jittaRanking][Keys.count];
-    final stockList = <Stock>[];
-    for (final item in resultList) {
-      stockList.add(Stock.fromJson(item));
+    try {
+      final result = await client
+          .query(QueryOptions(document: query, variables: variables));
+      final resultList = result.data![Keys.jittaRanking][Keys.data] as List;
+      final totalDataCount = result.data![Keys.jittaRanking][Keys.count];
+      final stockList = <Stock>[];
+      for (final item in resultList) {
+        stockList.add(Stock.fromJson(item));
+      }
+      return PaginationModel(
+        objectList: stockList,
+        totalDataCount: totalDataCount,
+      );
+    } catch (e) {
+      print('[getStockList] error: $e');
+      return PaginationModel.defaultModel<Stock>();
     }
-    print('[getStockList] stockList: $stockList');
-    return PaginationModel(
-      objectList: stockList,
-      totalDataCount: totalDataCount,
-    );
   }
 }
