@@ -57,6 +57,52 @@ void main() {
       expect(find.byKey(Key('DropdownSection')), findsOneWidget);
     });
 
+    testWidgets('should initially fetch', (tester) async {
+      await pumpPage(tester);
+
+      verify(mockStockInfoService.getSectors());
+      verify(mockStockInfoService.getStockList(
+        market: anyNamed('market'),
+        sector: anyNamed('sector'),
+        page: anyNamed('page'),
+        limit: anyNamed('limit'),
+      ));
+    });
+
+    testWidgets('should fetch when select market', (tester) async {
+      await pumpPage(tester);
+
+      await tester.tap(find.byKey(Key('MarketDropdown')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('United States').last);
+      await tester.pumpAndSettle();
+
+      verify(mockStockInfoService.getStockList(
+        market: 'us',
+        sector: anyNamed('sector'),
+        page: anyNamed('page'),
+        limit: anyNamed('limit'),
+      ));
+    });
+
+    testWidgets('should fetch when select sector', (tester) async {
+      await pumpPage(tester);
+
+      await tester.tap(find.byKey(Key('SectorDropdown')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Consumer').last);
+      await tester.pumpAndSettle();
+
+      verify(mockStockInfoService.getStockList(
+        market: anyNamed('market'),
+        sector: 'CONSUMER',
+        page: anyNamed('page'),
+        limit: anyNamed('limit'),
+      ));
+    });
+
     testGoldens('should match golden file', (tester) async {
       await pumpPage(tester);
       await multiScreenGolden(tester, 'home_page', devices: [

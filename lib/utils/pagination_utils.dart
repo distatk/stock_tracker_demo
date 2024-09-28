@@ -41,7 +41,7 @@ class PaginationUtils<T> {
   }
 
   /// can we load more information from callback
-  bool canLoadMore = false;
+  bool canLoadMore = true;
 
   /// is pagination utils is fetching data
   bool isFetching = false;
@@ -67,22 +67,23 @@ class PaginationUtils<T> {
     list
       ..clear()
       ..addAll(data);
+
+    _dataCount = list.length;
+    canLoadMore =
+        (_currentPage + 1) * Configs.defaultPageSize < _totalDataCount;
     removeDuplicatedItemsFromList();
   }
 
   /// load more data from server
   Future<void> loadMore() async {
-    if (_dataCount == _totalDataCount) {
-      final data = await _fetchData(pageToLoad: _currentPage);
-      list.addAll(data);
-    } else {
-      final data = await _fetchData(pageToLoad: _currentPage + 1);
-      list.addAll(data);
+    if (!canLoadMore) {
+      return;
     }
+    final data = await _fetchData(pageToLoad: _currentPage + 1);
+    list.addAll(data);
     _dataCount = list.length;
-    print('_dataCount: $_dataCount, _totalDataCount: $_totalDataCount');
-    canLoadMore = _dataCount < _totalDataCount;
-    _currentPage = _dataCount ~/ Configs.defaultPageSize;
+    canLoadMore =
+        (_currentPage + 1) * Configs.defaultPageSize < _totalDataCount;
     removeDuplicatedItemsFromList();
   }
 
