@@ -23,6 +23,7 @@ class _DropdownMenuWidgetState<T> extends State<DropdownMenuWidget<T>> {
   @override
   Widget build(BuildContext context) {
     return DropdownMenu<T>(
+      width: double.infinity,
       label: widget.label != null ? Text(widget.label!) : null,
       initialSelection: widget.valueList.first.value,
       onSelected: (T? value) {
