@@ -1,5 +1,3 @@
-import 'package:stock_tracker_demo/constants/enum.dart';
-
 class Stock {
   const Stock({
     required this.id,
@@ -23,5 +21,5 @@ class Stock {
   final double jittaScore;
   final String nativeName;
   final String industry;
-  final Sector sector;
+  final String sector;
 }
