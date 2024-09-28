@@ -6,17 +6,21 @@ class StockTile extends StatelessWidget {
 
   final Stock stock;
 
-  Widget _buildRanking() {
+  Widget _buildRanking(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Text(
         stock.rank.toString(),
         key: Key('Ranking'),
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }
 
-  Widget _buildNameAndSubtitle() {
+  Widget _buildNameAndSubtitle(BuildContext context) {
     return Column(
       key: Key('NameAndSubtitle'),
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,24 +28,37 @@ class StockTile extends StatelessWidget {
       children: [
         Text(
           stock.title,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         Text(
           stock.id,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.secondary,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context) {
     return Row(
       key: Key('Body'),
       children: [
-        _buildRanking(),
-        Expanded(child: _buildNameAndSubtitle()),
+        _buildRanking(context),
+        Expanded(child: _buildNameAndSubtitle(context)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(stock.jittaScore.toString()),
+          child: Text(
+            stock.jittaScore.toString(),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
         ),
       ],
     );
@@ -54,7 +71,7 @@ class StockTile extends StatelessWidget {
       height: 100.0,
       padding: EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.onPrimary,
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
@@ -64,7 +81,7 @@ class StockTile extends StatelessWidget {
           ),
         ],
       ),
-      child: _buildBody(),
+      child: _buildBody(context),
     );
   }
 }
