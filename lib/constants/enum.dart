@@ -103,3 +103,25 @@ extension MarketExtension on Market {
 }
 
 enum SignType { good, bad }
+
+extension SignTypeExtension on SignType {
+  static SignType fromString(String value) {
+    switch (value) {
+      case 'good':
+        return SignType.good;
+      case 'bad':
+        return SignType.bad;
+      default:
+        return SignType.good;
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case SignType.good:
+        return Colors.green;
+      case SignType.bad:
+        return Colors.red;
+    }
+  }
+}

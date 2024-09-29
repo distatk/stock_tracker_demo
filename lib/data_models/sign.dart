@@ -14,7 +14,7 @@ class Sign {
   factory Sign.fromJson(Map<String, dynamic> json) {
     return Sign(
       title: json['title'],
-      type: SignType.values[json['type']],
+      type: SignType.values.byName(json['type']),
       value: json['value'],
     );
   }
