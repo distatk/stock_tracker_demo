@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
-import 'package:stock_tracker_demo/data_models/pagination_model.dart';
+import 'package:stock_tracker_demo/constants/urls.dart';
 import 'package:stock_tracker_demo/data_models/stock.dart';
 import 'package:stock_tracker_demo/pages/home_page.dart';
 import 'package:stock_tracker_demo/services/stock_info_service.dart';
@@ -15,39 +19,72 @@ import 'home_page_test.mocks.dart';
 @GenerateNiceMocks([
   MockSpec<StockInfoService>(),
 ])
+class MockClient extends Mock implements http.Client {
+  MockClient({
+    required this.mockedResult,
+    this.mockedStatus = 200,
+  });
+
+  final Map<String, dynamic> mockedResult;
+  final int mockedStatus;
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    return Future<http.StreamedResponse>.value(
+      http.StreamedResponse(
+        Stream.value(utf8.encode(jsonEncode(mockedResult))),
+        mockedStatus,
+      ),
+    );
+  }
+}
+
 void main() {
   late MockStockInfoService mockStockInfoService;
+  late ValueNotifier<GraphQLClient> client;
+  late MockClient mockHttpClient;
 
   setUp(() {
     mockStockInfoService = MockStockInfoService();
+    mockHttpClient = MockClient(
+      mockedResult: {
+        'data': {
+          '__typename': 'Query',
+          'jittaRanking': {
+            'data': List.generate(
+              6,
+              (index) => Stock.testStock
+                  .copyWith(
+                    rank: index + 1,
+                    jittaScore: (index + 1) * 1.5,
+                  )
+                  .toJson(),
+            ),
+          }
+        }
+      },
+    );
+
+    client = ValueNotifier<GraphQLClient>(
+      GraphQLClient(
+        link: HttpLink(Urls.baseUrl, httpClient: mockHttpClient),
+        cache: GraphQLCache(),
+      ),
+    );
 
     when(mockStockInfoService.getSectors())
         .thenAnswer((_) async => ['Consumer', 'Energy', 'Financials']);
-    when(
-      mockStockInfoService.getStockList(
-        market: anyNamed('market'),
-        sector: anyNamed('sector'),
-        page: anyNamed('page'),
-        limit: anyNamed('limit'),
-      ),
-    ).thenAnswer(
-      (_) async => PaginationModel(
-        objectList: List.generate(
-          6,
-          (index) => Stock.testStock.copyWith(
-            rank: index + 1,
-            jittaScore: (index + 1) * 1.5,
-          ),
-        ),
-        totalDataCount: 10,
-      ),
-    );
+
+    // when()
   });
 
   Future<void> pumpPage(WidgetTester tester) async {
     await TestUtils.pumpWidget(
       tester,
-      MyHomePage(title: 'Stock Tracker Demo'),
+      GraphQLProvider(
+        client: client,
+        child: MyHomePage(title: 'Stock Tracker Demo'),
+      ),
       providers: [
         Provider<StockInfoService>.value(value: mockStockInfoService),
       ],
@@ -67,46 +104,6 @@ void main() {
       await pumpPage(tester);
 
       verify(mockStockInfoService.getSectors());
-      verify(mockStockInfoService.getStockList(
-        market: anyNamed('market'),
-        sector: anyNamed('sector'),
-        page: anyNamed('page'),
-        limit: anyNamed('limit'),
-      ));
-    });
-
-    testWidgets('should fetch when select market', (tester) async {
-      await pumpPage(tester);
-
-      await tester.tap(find.byKey(Key('MarketDropdown')));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('United States').last);
-      await tester.pumpAndSettle();
-
-      verify(mockStockInfoService.getStockList(
-        market: 'us',
-        sector: anyNamed('sector'),
-        page: anyNamed('page'),
-        limit: anyNamed('limit'),
-      ));
-    });
-
-    testWidgets('should fetch when select sector', (tester) async {
-      await pumpPage(tester);
-
-      await tester.tap(find.byKey(Key('SectorDropdown')));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Consumer').last);
-      await tester.pumpAndSettle();
-
-      verify(mockStockInfoService.getStockList(
-        market: anyNamed('market'),
-        sector: 'CONSUMER',
-        page: anyNamed('page'),
-        limit: anyNamed('limit'),
-      ));
     });
 
     testGoldens('should match golden file', (tester) async {

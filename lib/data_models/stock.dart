@@ -1,3 +1,5 @@
+import 'package:stock_tracker_demo/utils/text_utils.dart';
+
 class Stock {
   const Stock({
     required this.id,
@@ -78,5 +80,21 @@ class Stock {
       industry: json['industry'] as String?,
       sector: json['sector']?['name'] as String?,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'id': id,
+      'stockId': stockId,
+      'rank': rank,
+      'symbol': symbol,
+      'title': title,
+      'exchange': exchange,
+      'jittaScore': jittaScore,
+      if (nativeName != null) 'nativeName': nativeName,
+      if (industry != null) 'industry': industry,
+      if (sector != null)
+        'sector': {'name': sector, 'id': TextUtils.sectorNameToId(sector!)},
+    };
   }
 }
