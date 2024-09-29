@@ -10,8 +10,8 @@ class Stock {
     required this.exchange,
     required this.jittaScore,
     this.nativeName,
-    required this.industry,
-    required this.sector,
+    this.industry,
+    this.sector,
   })  : assert(jittaScore >= 0, 'jittaScore must be >= 0'),
         assert(jittaScore <= 10, 'jittaScore must be <= 10');
 
