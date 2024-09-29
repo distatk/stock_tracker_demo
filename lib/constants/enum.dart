@@ -101,3 +101,5 @@ extension MarketExtension on Market {
     );
   }
 }
+
+enum SignType { good, bad }
