@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -8,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stock_tracker_demo/constants/enum.dart';
 import 'package:stock_tracker_demo/data_models/stock.dart';
+import 'package:stock_tracker_demo/pages/stock_detail_page.dart';
 import 'package:stock_tracker_demo/services/stock_info_service.dart';
 import 'package:stock_tracker_demo/utils/text_utils.dart';
 import 'package:stock_tracker_demo/widgets/dropdown.dart';
@@ -132,7 +131,6 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         }
         if (result.data != null) {
-          log(result.data.toString());
           var resultList = result.data![Keys.jittaRanking][Keys.data] as List;
           final stockList = resultList.map((e) => Stock.fromJson(e)).toList();
           _stockCount = resultList.length;
@@ -172,7 +170,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemCount: stockList.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: StockTile(stock: stockList[index]),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => StockDetailPage(
+                            id: stockList[index].id,
+                            stockId: stockList[index].stockId,
+                            stockName: stockList[index].title,
+                          ),
+                        ),
+                      );
+                    },
+                    child: StockTile(stock: stockList[index]),
+                  ),
                 ),
               ),
             ),
@@ -186,10 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
           return Center(child: Text(result.exception.toString()));
         }
 
-        if (result.data == null) {
-          return Center(child: Text('something went wrong'));
-        }
-        return Center(child: const CircularProgressIndicator());
+        return Center(child: Text('something went wrong'));
       },
     );
   }
