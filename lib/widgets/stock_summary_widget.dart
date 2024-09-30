@@ -18,7 +18,7 @@ class _StockSummaryWidgetState extends State<StockSummaryWidget>
   bool _isExpanded = false;
   bool _shouldShowGradient = true;
 
-  final Tween<double> _heightFactorTween = Tween<double>(begin: 0.3, end: 1.0);
+  final Tween<double> _heightFactorTween = Tween<double>(begin: 0.4, end: 1.0);
   static final Animatable<double> _easeInTween =
       CurveTween(curve: Curves.easeIn);
   static final Animatable<double> _halfTween =
@@ -98,9 +98,9 @@ class _StockSummaryWidgetState extends State<StockSummaryWidget>
                   decoration: BoxDecoration(
                     color: Colors.amber,
                     gradient: LinearGradient(
-                      tileMode: TileMode.decal,
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
+                      stops: [0.25, 1],
                       colors: [Colors.white, Colors.white.withOpacity(0.0)],
                     ),
                   ),

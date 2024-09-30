@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +9,7 @@ import 'package:stock_tracker_demo/constants/urls.dart';
 import 'package:stock_tracker_demo/data_models/stock.dart';
 import 'package:stock_tracker_demo/pages/home_page.dart';
 import 'package:stock_tracker_demo/services/stock_info_service.dart';
+import 'package:stock_tracker_demo/test_utils/mock_http_client.dart';
 import 'package:stock_tracker_demo/test_utils/test_utils.dart';
 
 import 'home_page_test.mocks.dart';
@@ -19,26 +17,6 @@ import 'home_page_test.mocks.dart';
 @GenerateNiceMocks([
   MockSpec<StockInfoService>(),
 ])
-class MockClient extends Mock implements http.Client {
-  MockClient({
-    required this.mockedResult,
-    this.mockedStatus = 200,
-  });
-
-  final Map<String, dynamic> mockedResult;
-  final int mockedStatus;
-
-  @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
-    return Future<http.StreamedResponse>.value(
-      http.StreamedResponse(
-        Stream.value(utf8.encode(jsonEncode(mockedResult))),
-        mockedStatus,
-      ),
-    );
-  }
-}
-
 void main() {
   late MockStockInfoService mockStockInfoService;
   late ValueNotifier<GraphQLClient> client;

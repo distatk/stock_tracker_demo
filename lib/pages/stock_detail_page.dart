@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:stock_tracker_demo/data_models/stock_detail.dart';
+import 'package:stock_tracker_demo/widgets/ranking_widget.dart';
 import 'package:stock_tracker_demo/widgets/stock_summary_widget.dart';
 
 import '../constants/queries.dart';
+import '../data_models/ranking.dart';
 
 class StockDetailPage extends StatelessWidget {
   const StockDetailPage({
@@ -38,22 +42,60 @@ class StockDetailPage extends StatelessWidget {
     );
   }
 
+  Widget _buildSymbolAndRanking(
+    BuildContext context,
+    String symbol,
+    Ranking ranking,
+  ) {
+    return Row(
+      key: Key('SymbolAndRanking'),
+      children: [
+        Expanded(
+          child: Text(
+            symbol,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ),
+        RankingWidget(ranking: ranking),
+      ],
+    );
+  }
+
+  Future<StockDetail> _getStockDetailFromJsonFuture(
+    Map<String, dynamic> stockDetailJson,
+  ) {
+    // isolate computation not supported in test
+    if (Platform.environment.containsKey('FLUTTER_TEST')) {
+      return Future.value(StockDetail.fromJson(stockDetailJson));
+    } else {
+      // Uses isolate prevent ui jank
+      return compute<Map<String, dynamic>, StockDetail>(
+        StockDetail.fromJson,
+        stockDetailJson,
+      );
+    }
+  }
+
   Widget _buildStockInfo(
     BuildContext context,
     Map<String, dynamic> stockDetailJson,
   ) {
-    // Uses isolate prevent ui jank
-    final stockDetailFuture = compute<Map<String, dynamic>, StockDetail>(
-      StockDetail.fromJson,
-      stockDetailJson,
-    );
     return FutureBuilder<StockDetail>(
-      future: stockDetailFuture,
+      future: _getStockDetailFromJsonFuture(stockDetailJson),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final stockDetail = snapshot.data!;
           return Column(
             children: [
+              _buildSymbolAndRanking(
+                context,
+                stockDetail.symbol,
+                stockDetail.ranking,
+              ),
+              Divider(),
               if (stockDetail.summary != null)
                 _buildSummary(context, stockDetail.summary!),
               Divider(),
