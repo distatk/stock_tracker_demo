@@ -43,7 +43,7 @@ class StockDetail extends Stock {
     final summary = json['summary'] as String?;
     final priceCurrency = json['price_currency'] as String?;
     final currencySign = json['currency_sign'] as String?;
-    final latestPrice = json['price']['latest']['close'] as double;
+    final latestPrice = json['price']['latest']['close'] as num;
     final latestPriceDate =
         DateTime.parse(json['price']['latest']['datetime'] as String);
     final ipoDate = DateTime.parse(json['company']['ipo_date'] as String);
@@ -68,7 +68,7 @@ class StockDetail extends Stock {
         summary: summary,
         priceCurrency: priceCurrency,
         currencySign: currencySign,
-        latestPrice: latestPrice,
+        latestPrice: latestPrice.toDouble(),
         latestPriceDate: latestPriceDate,
         factor: factor,
         signs: signs.map((e) => Sign.fromJson(e)).toList(),
