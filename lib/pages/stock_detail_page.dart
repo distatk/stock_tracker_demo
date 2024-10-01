@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:stock_tracker_demo/data_models/stock_detail.dart';
 import 'package:stock_tracker_demo/widgets/ranking_widget.dart';
@@ -9,6 +10,7 @@ import 'package:stock_tracker_demo/widgets/stock_summary_widget.dart';
 
 import '../constants/queries.dart';
 import '../data_models/ranking.dart';
+import '../widgets/chart_widget.dart';
 
 class StockDetailPage extends StatelessWidget {
   const StockDetailPage({
@@ -88,21 +90,35 @@ class StockDetailPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final stockDetail = snapshot.data!;
-          return Column(
-            children: [
-              _buildSymbolAndRanking(
-                context,
-                stockDetail.symbol,
-                stockDetail.ranking,
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildSymbolAndRanking(
+                    context,
+                    stockDetail.symbol,
+                    stockDetail.ranking,
+                  ),
+                  Divider(),
+                  Gap(8),
+                  ChartWidget(
+                    priceHistory: stockDetail.priceHistory,
+                    currency: stockDetail.currencySign ??
+                        stockDetail.priceCurrency ??
+                        '',
+                  ),
+                  if (stockDetail.summary != null)
+                    _buildSummary(context, stockDetail.summary!),
+                  Divider(),
+                ],
               ),
-              Divider(),
-              if (stockDetail.summary != null)
-                _buildSummary(context, stockDetail.summary!),
-              Divider(),
-            ],
+            ),
           );
         }
         if (snapshot.hasError) {
+          print('FutureBuilder error');
+          print(snapshot.error);
           return _buildErrorWidget();
         }
         return Center(child: const CircularProgressIndicator());
@@ -125,10 +141,7 @@ class StockDetailPage extends StatelessWidget {
         if (result.hasException) {
           return _buildErrorWidget();
         }
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: _buildStockInfo(context, result.data!['stock']),
-        );
+        return _buildStockInfo(context, result.data!['stock']);
       },
     );
   }

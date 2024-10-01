@@ -44,6 +44,7 @@ dependencies:
   percent_indicator: ^4.2.3
   syncfusion_flutter_gauges: ^27.1.50
   http: ^1.2.2
+  syncfusion_flutter_charts: ^27.1.51
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to

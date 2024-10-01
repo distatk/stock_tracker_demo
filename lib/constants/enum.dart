@@ -125,3 +125,58 @@ extension SignTypeExtension on SignType {
     }
   }
 }
+
+enum StockChartInterval {
+  halfYear,
+  year,
+  twoYear,
+  threeYear,
+  fiveYear,
+}
+
+extension StockChartIntervalExtension on StockChartInterval {
+  Duration get duration {
+    switch (this) {
+      case StockChartInterval.halfYear:
+        return const Duration(days: 180);
+      case StockChartInterval.year:
+        return const Duration(days: 365);
+      case StockChartInterval.twoYear:
+        return const Duration(days: 730);
+      case StockChartInterval.threeYear:
+        return const Duration(days: 1095);
+      case StockChartInterval.fiveYear:
+        return const Duration(days: 1825);
+    }
+  }
+
+  String get label {
+    switch (this) {
+      case StockChartInterval.halfYear:
+        return '6 M';
+      case StockChartInterval.year:
+        return '1 Y';
+      case StockChartInterval.twoYear:
+        return '2 Y';
+      case StockChartInterval.threeYear:
+        return '3 Y';
+      case StockChartInterval.fiveYear:
+        return '5 Y';
+    }
+  }
+
+  int get dataCount {
+    switch (this) {
+      case StockChartInterval.halfYear:
+        return 6;
+      case StockChartInterval.year:
+        return 12;
+      case StockChartInterval.twoYear:
+        return 24;
+      case StockChartInterval.threeYear:
+        return 36;
+      case StockChartInterval.fiveYear:
+        return 60;
+    }
+  }
+}
