@@ -6,6 +6,7 @@ import 'package:stock_tracker_demo/constants/urls.dart';
 import 'package:stock_tracker_demo/pages/stock_detail_page.dart';
 import 'package:stock_tracker_demo/test_utils/mock_http_client.dart';
 import 'package:stock_tracker_demo/test_utils/test_utils.dart';
+import 'package:stock_tracker_demo/widgets/chart_widget.dart';
 import 'package:stock_tracker_demo/widgets/ranking_widget.dart';
 import 'package:stock_tracker_demo/widgets/stock_summary_widget.dart';
 
@@ -45,6 +46,7 @@ void main() {
       await pumpPage(tester);
 
       expect(find.byKey(Key('SymbolAndRanking')), findsOneWidget);
+      expect(find.byType(ChartWidget), findsOneWidget);
       expect(find.byType(RankingWidget), findsOneWidget);
       expect(find.byType(StockSummaryWidget), findsOneWidget);
     });

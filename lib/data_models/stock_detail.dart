@@ -1,4 +1,5 @@
 import 'package:stock_tracker_demo/data_models/factor.dart';
+import 'package:stock_tracker_demo/data_models/price_history.dart';
 import 'package:stock_tracker_demo/data_models/ranking.dart';
 import 'package:stock_tracker_demo/data_models/score_history.dart';
 import 'package:stock_tracker_demo/data_models/sign.dart';
@@ -24,6 +25,7 @@ class StockDetail extends Stock {
     required this.factor,
     this.signs = const [],
     this.scoreHistory = const [],
+    this.priceHistory = const [],
     required this.ranking,
     required this.ipoDate,
   });
@@ -36,6 +38,7 @@ class StockDetail extends Stock {
   final Factor factor;
   final List<Sign> signs;
   final List<ScoreHistory> scoreHistory;
+  final List<PriceHistory> priceHistory;
   final Ranking ranking;
   final DateTime ipoDate;
 
@@ -53,6 +56,7 @@ class StockDetail extends Stock {
     final ranking =
         Ranking.fromJson(json['comparison']['market'] as Map<String, dynamic>);
     final scoreHistory = json['jitta']['score']['values'] as List;
+    final priceHistory = json['jitta']['monthlyPrice']['values'] as List;
     return StockDetail(
         id: json['id'] as String,
         stockId: json['stockId'] as int,
@@ -74,6 +78,8 @@ class StockDetail extends Stock {
         signs: signs.map((e) => Sign.fromJson(e)).toList(),
         scoreHistory:
             scoreHistory.map((e) => ScoreHistory.fromJson(e)).toList(),
+        priceHistory:
+            priceHistory.map((e) => PriceHistory.fromJson(e)).toList(),
         ranking: ranking);
   }
 }
