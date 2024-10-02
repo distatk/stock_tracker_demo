@@ -2,6 +2,21 @@
 
 Stock tracker demo app
 
+## Overview
+
+This project leverages a combination of architectural patterns to provide a robust and maintainable
+structure. The core components include:
+
+- Provider: A state management solution that simplifies data flow and updates throughout the
+  application.
+- GraphQL: A query language for APIs that enables efficient data fetching and manipulation.
+- syncfusion_flutter_charts: A chart library that provides a variety of chart types and
+  customization options.
+- Hive: An in-memory database that stores data in encrypted format (Provided in GraphQL package).
+- pull_to_refresh: A library that provides pull-to-refresh functionality for Flutter applications.
+- mockito: A mocking library for unit testing.
+- golden_toolkit: A library for easier golden tests for Flutter applications.
+
 ## Prerequisites:
 
 - Flutter SDK: Ensure you have Flutter 3.24.0 or later installed on your system. You can download it
