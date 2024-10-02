@@ -50,8 +50,8 @@ class StockDetail extends Stock {
     final latestPriceDate =
         DateTime.parse(json['price']['latest']['datetime'] as String);
     final ipoDate = DateTime.parse(json['company']['ipo_date'] as String);
-    final factor =
-        Factor.fromJson(json['jitta']['factor'] as Map<String, dynamic>);
+    final factor = Factor.fromJson(
+        json['jitta']['factor']['last'] as Map<String, dynamic>);
     final signs = json['jitta']['sign']['last'] as List;
     final ranking =
         Ranking.fromJson(json['comparison']['market'] as Map<String, dynamic>);

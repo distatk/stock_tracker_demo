@@ -34,7 +34,7 @@ class Queries {
 ''';
 
   static const getStockDetail = r'''
-  query stockSummaryQuery($stockId: Int, $id: String) {
+query stockSummaryQuery($stockId: Int, $id: String) {
   stock(stockId: $stockId, id: $id) {
     __typename
     isFollowing

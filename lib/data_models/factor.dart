@@ -33,23 +33,36 @@ class Factor {
   final FactorValue? managementFactor;
   final FactorValue? returnFactor;
 
+  List<FactorValue> get values => [
+        if (growthFactor != null) growthFactor!,
+        if (recentFactor != null) recentFactor!,
+        if (financialFactor != null) financialFactor!,
+        if (managementFactor != null) managementFactor!,
+        if (returnFactor != null) returnFactor!,
+      ];
+
   factory Factor.fromJson(Map<String, dynamic> json) {
     return Factor(
-      growthFactor: json['growth'] == null
+      growthFactor: json['value']['growth'] == null
           ? null
-          : FactorValue.fromJson(json['growth'] as Map<String, dynamic>),
-      recentFactor: json['recent'] == null
+          : FactorValue.fromJson(
+              json['value']['growth'] as Map<String, dynamic>),
+      recentFactor: json['value']['recent'] == null
           ? null
-          : FactorValue.fromJson(json['recent'] as Map<String, dynamic>),
-      financialFactor: json['financial'] == null
+          : FactorValue.fromJson(
+              json['value']['recent'] as Map<String, dynamic>),
+      financialFactor: json['value']['financial'] == null
           ? null
-          : FactorValue.fromJson(json['financial'] as Map<String, dynamic>),
-      managementFactor: json['management'] == null
+          : FactorValue.fromJson(
+              json['value']['financial'] as Map<String, dynamic>),
+      managementFactor: json['value']['management'] == null
           ? null
-          : FactorValue.fromJson(json['management'] as Map<String, dynamic>),
-      returnFactor: json['return'] == null
+          : FactorValue.fromJson(
+              json['value']['management'] as Map<String, dynamic>),
+      returnFactor: json['value']['return'] == null
           ? null
-          : FactorValue.fromJson(json['return'] as Map<String, dynamic>),
+          : FactorValue.fromJson(
+              json['value']['return'] as Map<String, dynamic>),
     );
   }
 }
