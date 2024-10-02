@@ -2,9 +2,7 @@
 
 Stock tracker demo app
 
-## Getting Started
-
-### Prerequisites:
+## Prerequisites:
 
 - Flutter SDK: Ensure you have Flutter 3.24.0 or later installed on your system. You can download it
 - from the official Flutter website: https://docs.flutter.dev/get-started/install
@@ -16,7 +14,7 @@ Stock tracker demo app
     - IntelliJ IDEA (with Flutter plugin)
     - Visual Studio Code (with Flutter and Dart extensions)
 
-### Steps to Run the App:
+## Steps to Run the App:
 
 ### Clone or Download the App Repository:
 
@@ -24,7 +22,7 @@ Stock tracker demo app
   command in your terminal:
 
 ```bash
-git clone <repository_url>
+git clone https://github.com/distatk/stock_tracker_demo.git
 ```
 
 - If you have the app downloaded as a ZIP file, extract its contents to a desired location.
