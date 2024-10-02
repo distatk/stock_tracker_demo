@@ -10,9 +10,11 @@ import 'package:stock_tracker_demo/widgets/ranking_widget.dart';
 import 'package:stock_tracker_demo/widgets/stock_summary_widget.dart';
 
 import '../constants/queries.dart';
+import '../data_models/factor.dart';
 import '../data_models/ranking.dart';
 import '../data_models/sign.dart';
 import '../widgets/chart_widget.dart';
+import '../widgets/factor_score_widget.dart';
 
 class StockDetailPage extends StatelessWidget {
   const StockDetailPage({
@@ -112,6 +114,60 @@ class StockDetailPage extends StatelessWidget {
     );
   }
 
+  Widget _buildFactorSection(BuildContext context, Factor factor) {
+    final factorValueList = factor.values;
+    if (factorValueList.isEmpty) {
+      return SizedBox.shrink();
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Factors',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Gap(8),
+        GridView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            childAspectRatio: 0.8,
+          ),
+          itemCount: factorValueList.length,
+          itemBuilder: (context, index) => Container(
+            padding: EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  '${factorValueList[index].name}\n\n',
+                  textAlign: TextAlign.center,
+                  maxLines: 3,
+                ),
+                Spacer(),
+                FactorScoreWidget(
+                  value: factorValueList[index].value,
+                ),
+                Gap(8)
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<StockDetail> _getStockDetailFromJsonFuture(
     Map<String, dynamic> stockDetailJson,
   ) {
@@ -149,6 +205,7 @@ class StockDetailPage extends StatelessWidget {
                   Divider(),
                   Gap(8),
                   ChartWidget(
+                    currentPrice: stockDetail.latestPrice,
                     priceHistory: stockDetail.priceHistory,
                     currency: stockDetail.currencySign ??
                         stockDetail.priceCurrency ??
@@ -158,14 +215,14 @@ class StockDetailPage extends StatelessWidget {
                     _buildSummary(context, stockDetail.summary!),
                   Divider(),
                   _buildSignsSection(context, stockDetail.signs),
+                  Divider(),
+                  _buildFactorSection(context, stockDetail.factor),
                 ],
               ),
             ),
           );
         }
         if (snapshot.hasError) {
-          print('FutureBuilder error');
-          print(snapshot.error);
           return _buildErrorWidget();
         }
         return Center(child: const CircularProgressIndicator());
@@ -186,8 +243,6 @@ class StockDetailPage extends StatelessWidget {
           );
         }
         if (result.hasException) {
-          print('Query error');
-          print(result.exception);
           return _buildErrorWidget();
         }
         return _buildStockInfo(context, result.data!['stock']);

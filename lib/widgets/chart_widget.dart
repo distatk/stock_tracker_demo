@@ -8,6 +8,7 @@ import '../constants/enum.dart';
 class ChartWidget extends StatefulWidget {
   const ChartWidget({
     required this.currency,
+    required this.currentPrice,
     this.priceHistory = const [],
     super.key,
   });
@@ -15,6 +16,8 @@ class ChartWidget extends StatefulWidget {
   final List<PriceHistory> priceHistory;
 
   final String currency;
+
+  final double currentPrice;
 
   @override
   State<ChartWidget> createState() => _ChartWidgetState();
@@ -36,7 +39,7 @@ class _ChartWidgetState extends State<ChartWidget>
     now = DateTime(dateTimeNow.year, dateTimeNow.month, 1);
     minimumDateTime = now.subtract(interval.duration);
     _tabController = TabController(length: 5, vsync: this, initialIndex: 1);
-    _priceNotifier = ValueNotifier(widget.priceHistory.first.value);
+    _priceNotifier = ValueNotifier(widget.currentPrice);
     _trackballBehavior = TrackballBehavior(
       enable: true,
       tooltipDisplayMode: TrackballDisplayMode.floatAllPoints,
@@ -72,9 +75,9 @@ class _ChartWidgetState extends State<ChartWidget>
       valueListenable: _priceNotifier,
       builder: (context, value, _) {
         var textColor = Theme.of(context).colorScheme.primary;
-        if (value > widget.priceHistory.first.value) {
+        if (value > widget.currentPrice) {
           textColor = Colors.green;
-        } else if (value < widget.priceHistory.first.value) {
+        } else if (value < widget.currentPrice) {
           textColor = Colors.red;
         }
         return Text(
@@ -104,7 +107,7 @@ class _ChartWidgetState extends State<ChartWidget>
             }
           },
           onChartTouchInteractionUp: (chartTouchInteractionArgs) {
-            _priceNotifier.value = widget.priceHistory.first.value;
+            _priceNotifier.value = widget.currentPrice;
           },
           primaryXAxis: DateTimeAxis(
             maximum: DateTime.now(),
