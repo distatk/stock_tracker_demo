@@ -127,15 +127,6 @@ class Queries {
           year
         }
       }
-      line {
-        total
-        values(filterBy: { limit: 132, sort: DESC }) {
-          id
-          value
-          year
-          month
-        }
-      }
       factor {
         last {
           value {

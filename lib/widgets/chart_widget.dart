@@ -28,17 +28,15 @@ class _ChartWidgetState extends State<ChartWidget>
   late TabController _tabController;
   late TrackballBehavior _trackballBehavior;
   late ValueNotifier<double> _priceNotifier;
-  late double currentPrice;
 
   @override
   void initState() {
     super.initState();
     final dateTimeNow = DateTime.now();
-    currentPrice = widget.priceHistory.first.value;
     now = DateTime(dateTimeNow.year, dateTimeNow.month, 1);
     minimumDateTime = now.subtract(interval.duration);
     _tabController = TabController(length: 5, vsync: this, initialIndex: 1);
-    _priceNotifier = ValueNotifier(currentPrice);
+    _priceNotifier = ValueNotifier(widget.priceHistory.first.value);
     _trackballBehavior = TrackballBehavior(
       enable: true,
       tooltipDisplayMode: TrackballDisplayMode.floatAllPoints,
@@ -74,9 +72,9 @@ class _ChartWidgetState extends State<ChartWidget>
       valueListenable: _priceNotifier,
       builder: (context, value, _) {
         var textColor = Theme.of(context).colorScheme.primary;
-        if (value > currentPrice) {
+        if (value > widget.priceHistory.first.value) {
           textColor = Colors.green;
-        } else if (value < currentPrice) {
+        } else if (value < widget.priceHistory.first.value) {
           textColor = Colors.red;
         }
         return Text(
@@ -100,14 +98,13 @@ class _ChartWidgetState extends State<ChartWidget>
         SfCartesianChart(
           trackballBehavior: _trackballBehavior,
           onTrackballPositionChanging: (trackballArgs) {
-            print(trackballArgs.chartPointInfo.chartPoint?.y);
             if (trackballArgs.chartPointInfo.chartPoint?.y != null) {
               _priceNotifier.value =
                   trackballArgs.chartPointInfo.chartPoint!.y!.toDouble();
             }
           },
           onChartTouchInteractionUp: (chartTouchInteractionArgs) {
-            _priceNotifier.value = currentPrice;
+            _priceNotifier.value = widget.priceHistory.first.value;
           },
           primaryXAxis: DateTimeAxis(
             maximum: DateTime.now(),

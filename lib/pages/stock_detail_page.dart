@@ -4,12 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:stock_tracker_demo/constants/enum.dart';
 import 'package:stock_tracker_demo/data_models/stock_detail.dart';
 import 'package:stock_tracker_demo/widgets/ranking_widget.dart';
 import 'package:stock_tracker_demo/widgets/stock_summary_widget.dart';
 
 import '../constants/queries.dart';
 import '../data_models/ranking.dart';
+import '../data_models/sign.dart';
 import '../widgets/chart_widget.dart';
 
 class StockDetailPage extends StatelessWidget {
@@ -66,6 +68,50 @@ class StockDetailPage extends StatelessWidget {
     );
   }
 
+  Widget _buildSign(BuildContext context, Sign sign) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          Icon(
+            sign.type == SignType.good
+                ? Icons.thumb_up_rounded
+                : Icons.thumb_down_rounded,
+            color: sign.type.color,
+          ),
+          Gap(8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(sign.title, style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(sign.value),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSignsSection(
+    BuildContext context,
+    List<Sign> signs,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Signs',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Gap(8),
+        ...signs.map((sign) => _buildSign(context, sign)),
+      ],
+    );
+  }
+
   Future<StockDetail> _getStockDetailFromJsonFuture(
     Map<String, dynamic> stockDetailJson,
   ) {
@@ -111,6 +157,7 @@ class StockDetailPage extends StatelessWidget {
                   if (stockDetail.summary != null)
                     _buildSummary(context, stockDetail.summary!),
                   Divider(),
+                  _buildSignsSection(context, stockDetail.signs),
                 ],
               ),
             ),
@@ -139,6 +186,8 @@ class StockDetailPage extends StatelessWidget {
           );
         }
         if (result.hasException) {
+          print('Query error');
+          print(result.exception);
           return _buildErrorWidget();
         }
         return _buildStockInfo(context, result.data!['stock']);

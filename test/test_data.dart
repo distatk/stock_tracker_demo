@@ -363,6 +363,13 @@ const testStockDetailResponseData = {
           "values": [
             {
               "__typename": "DefaultScopeItem",
+              "id": "2024-10",
+              "value": 18.3,
+              "year": 2024,
+              "month": 10
+            },
+            {
+              "__typename": "DefaultScopeItem",
               "id": "2024-09",
               "value": 18.4,
               "year": 2024,
