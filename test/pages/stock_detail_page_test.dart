@@ -56,6 +56,10 @@ void main() {
       await multiScreenGolden(tester, 'stock_detail_page', devices: [
         Device.iphone11,
         Device.phone.copyWith(name: "smallPhone"),
+        Device.phone.copyWith(
+          name: "long",
+          size: Size(414, 1500),
+        ),
       ]);
     });
   });
